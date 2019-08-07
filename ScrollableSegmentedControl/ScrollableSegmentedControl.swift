@@ -321,7 +321,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     /**
      Removes all segments from the receiver.
      */
-    @objc public func removeAllSegment(at index: Int) {
+    @objc public func removeAllSegment() {
         segmentsData.removeAll()
         selectedSegmentIndex = -1
         reloadSegments()
