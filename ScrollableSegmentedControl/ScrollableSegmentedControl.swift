@@ -89,15 +89,61 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    fileprivate var _segmentContentColor: UIColor?
-    @objc public dynamic var segmentContentColor: UIColor? {
-        get { return _segmentContentColor }
+    fileprivate var _segmentBackgroundColor: UIColor  = .white
+    @objc public dynamic var segmentBackgroundColor: UIColor {
+        get { return _segmentBackgroundColor }
         set {
-            _segmentContentColor = newValue
+            _segmentBackgroundColor = newValue
             reloadSegments()
         }
     }
     
+    fileprivate var _selectedSegmentBackgroundColor: UIColor = .white
+    @objc public dynamic var selectedSegmentBackgroundColor: UIColor {
+        get { return _selectedSegmentBackgroundColor }
+        set {
+            _selectedSegmentBackgroundColor = newValue
+            reloadSegments()
+        }
+    }
+    
+    fileprivate var _segmentTitleColor: UIColor?
+    @objc public dynamic var segmentTitleColor: UIColor? {
+        get { return _segmentTitleColor }
+        set {
+            _segmentTitleColor = newValue
+            reloadSegments()
+        }
+    }
+    
+    fileprivate var _segmentBorderColor: UIColor = .gray
+    @objc public dynamic var segmentBorderColor: UIColor {
+        get { return _segmentBorderColor }
+        set {
+            _segmentBorderColor = newValue
+            reloadSegments()
+        }
+    }
+    
+    fileprivate var _segmentBorderWidth: NSNumber = 0.0
+    @objc public dynamic var segmentBorderWidth: NSNumber {
+        get { return _segmentBorderWidth }
+        set {
+            _segmentBorderWidth = newValue
+            reloadSegments()
+        }
+    }
+    
+    fileprivate var _segmentCornerRadius: NSNumber = 0.0
+    @objc public dynamic var segmentCornerRadius: NSNumber {
+        get { return _segmentCornerRadius }
+        set {
+            _segmentCornerRadius = newValue
+            reloadSegments()
+        }
+    }
+    
+
     fileprivate var _underlineHeight: CGFloat = 4.0
     @objc public dynamic var underlineHeight: CGFloat {
         get { return _underlineHeight }
@@ -109,16 +155,43 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    fileprivate var _selectedSegmentContentColor: UIColor?
-    @objc public dynamic var selectedSegmentContentColor: UIColor? {
-        get { return _selectedSegmentContentColor }
+    fileprivate var _selectedSegmentTitleColor: UIColor?
+    @objc public dynamic var selectedSegmentTitleColor: UIColor? {
+        get { return _selectedSegmentTitleColor }
         set {
-            _selectedSegmentContentColor = newValue
+            _selectedSegmentTitleColor = newValue
             reloadSegments()
         }
     }
     
+    fileprivate var _selectedSegmentBorderColor: UIColor?
+    @objc public dynamic var selectedSegmentBorderColor: UIColor? {
+        get { return _selectedSegmentBorderColor }
+        set {
+            _selectedSegmentBorderColor = newValue
+            reloadSegments()
+        }
+    }
     
+    fileprivate var _selectedSegmentBorderWidth: NSNumber?
+    @objc public dynamic var selectedSegmentBorderWidth: NSNumber? {
+        get { return _selectedSegmentBorderWidth }
+        set {
+            _selectedSegmentBorderWidth = newValue
+            reloadSegments()
+        }
+    }
+    
+    fileprivate var _selectedSegmentCornerRadius: NSNumber?
+    @objc public dynamic var selectedSegmentCornerRadius: NSNumber? {
+        get { return _selectedSegmentCornerRadius }
+        set {
+            _selectedSegmentCornerRadius = newValue
+            reloadSegments()
+        }
+    }
+    
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -488,9 +561,21 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
             }
             
             
-            segmentCell.contentColor = segmentedControl.segmentContentColor
-            segmentCell.selectedContentColor = segmentedControl.selectedSegmentContentColor
+            segmentCell.contentColor = segmentedControl.segmentTitleColor
+            segmentCell.selectedContentColor = segmentedControl.selectedSegmentTitleColor
             
+            segmentCell.containerViewBackgroundColor = segmentedControl.segmentBackgroundColor
+            segmentCell.selectedContainerViewBackgroundColor = segmentedControl.selectedSegmentBackgroundColor
+
+            segmentCell.containerViewBorderColor = segmentedControl.segmentBorderColor
+            segmentCell.containerViewBorderWidth = CGFloat(truncating: segmentedControl.segmentBorderWidth)
+            segmentCell.containerViewCornerRadius = CGFloat(truncating: segmentedControl.segmentCornerRadius)
+            
+            segmentCell.selectedContainerViewBorderColor = segmentedControl.selectedSegmentBorderColor ?? UIColor.black
+            segmentCell.selectedContainerViewBorderWidth = CGFloat(truncating: segmentedControl.selectedSegmentBorderWidth ?? segmentedControl.segmentBorderWidth)
+            segmentCell.selectedContainerViewCornerRadius = CGFloat(truncating: segmentedControl.selectedSegmentCornerRadius ?? segmentedControl.segmentCornerRadius)
+            
+
             segmentCell.normalAttributedTitle = data.normalAttributedTitle
             segmentCell.highlightedAttributedTitle = data.highlightedAttributedTitle
             segmentCell.selectedAttributedTitle = data.selectedAttributedTitle
@@ -550,6 +635,78 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
                 }
             }
         }
+        var containerView: UIView = UIView()
+        var containerViewPadding: UIEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5 ) {
+            didSet {
+                if oldValue != containerViewPadding {
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var containerViewBackgroundColor: UIColor? {
+            didSet {
+                if oldValue != containerViewBackgroundColor {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var containerViewCornerRadius: CGFloat? {
+            didSet {
+                if oldValue != containerViewCornerRadius {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var containerViewBorderWidth: CGFloat? {
+            didSet {
+                if oldValue != containerViewBorderWidth {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var containerViewBorderColor: UIColor? {
+            didSet {
+                if oldValue != containerViewBorderColor {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var selectedContainerViewBackgroundColor: UIColor? {
+            didSet {
+                if oldValue != selectedContainerViewBackgroundColor {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var selectedContainerViewCornerRadius: CGFloat? {
+            didSet {
+                if oldValue != selectedContainerViewCornerRadius {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var selectedContainerViewBorderWidth: CGFloat? {
+            didSet {
+                if oldValue != selectedContainerViewBorderWidth {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
+        var selectedContainerViewBorderColor: UIColor? {
+            didSet {
+                if oldValue != selectedContainerViewBorderColor {
+                    setupContainerView()
+                    setNeedsUpdateConstraints()
+                }
+            }
+        }
         public var contentColor: UIColor?
         public var selectedContentColor: UIColor?
         
@@ -568,7 +725,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
                         underlineView!.tag = 999
                         underlineView!.backgroundColor = tintColor
                         underlineView!.isHidden = !isSelected
-                        contentView.insertSubview(underlineView!, at: contentView.subviews.count)
+                        containerView.insertSubview(underlineView!, at: contentView.subviews.count)
                     }
                     
                     configureConstraints()
@@ -576,7 +733,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
             }
         }
         
-        override var tintColor: UIColor!{
+        override var tintColor: UIColor! {
             didSet{
                 underlineView?.backgroundColor = tintColor
             }
@@ -593,15 +750,36 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
         
         func configure() {
+            setupContainerView()
+            contentView.insertSubview(containerView, at: contentView.subviews.count)
             configureConstraints()
         }
         
+        func setupContainerView() {
+            if isSelected {
+                containerView.backgroundColor = selectedContainerViewBackgroundColor
+                containerView.layer.borderWidth = selectedContainerViewBorderWidth ?? (containerViewBorderWidth ?? 0.0)
+                containerView.layer.borderColor = selectedContainerViewBorderColor?.cgColor ?? (containerViewBorderColor?.cgColor ?? UIColor.white.cgColor)
+                containerView.layer.cornerRadius = selectedContainerViewCornerRadius ?? (containerViewCornerRadius ?? 0.0)
+            } else {
+                containerView.backgroundColor = containerViewBackgroundColor
+                containerView.layer.borderWidth = containerViewBorderWidth ?? 0.0
+                containerView.layer.borderColor = containerViewBorderColor?.cgColor ?? UIColor.white.cgColor
+                containerView.layer.cornerRadius = containerViewCornerRadius ?? 0.0
+            }
+        }
+        
         private func configureConstraints() {
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: containerViewPadding.top).isActive = true
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: containerViewPadding.left).isActive = true
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -containerViewPadding.right).isActive = true
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -containerViewPadding.bottom).isActive = true
             if let underline = underlineView {
                 underline.translatesAutoresizingMaskIntoConstraints = false
-                underline.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-                underline.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-                underline.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+                underline.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
+                underline.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
+                underline.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
             }
         }
         
@@ -619,6 +797,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         
         override var isSelected: Bool {
             didSet {
+                setupContainerView()
                 underlineView?.isHidden = !isSelected
             }
         }
@@ -627,7 +806,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     private class TextOnlySegmentCollectionViewCell: BaseSegmentCollectionViewCell {
         let titleLabel = UILabel()
         
-        override var contentColor:UIColor? {
+        override var contentColor: UIColor? {
             didSet {
                 titleLabel.textColor = (contentColor == nil) ? BaseSegmentCollectionViewCell.defaultTextColor : contentColor!
             }
@@ -669,7 +848,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         
         override func configure(){
             super.configure()
-            contentView.addSubview(titleLabel)
+            containerView.addSubview(titleLabel)
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
             titleLabel.textColor = BaseSegmentCollectionViewCell.defaultTextColor
             titleLabel.font = BaseSegmentCollectionViewCell.defaultFont
