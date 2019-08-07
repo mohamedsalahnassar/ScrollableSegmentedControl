@@ -19,10 +19,10 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
 @IBDesignable
 @objc public class ScrollableSegmentedControl: UIControl {
     fileprivate let flowLayout = UICollectionViewFlowLayout()
-    fileprivate var collectionView:UICollectionView?
-    private var collectionViewController:CollectionViewController?
+    fileprivate var collectionView: UICollectionView?
+    private var collectionViewController: CollectionViewController?
     private var segmentsData = [SegmentData]()
-    private var longestTextWidth:CGFloat = 10
+    private var longestTextWidth: CGFloat = 10
     
     /**
      A Boolean value that determines if the width of all segments is going to be fixed or not.
@@ -39,11 +39,11 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     }
     
     
-    @objc public var segmentStyle:ScrollableSegmentedControlSegmentStyle = .textOnly {
+    @objc public var segmentStyle: ScrollableSegmentedControlSegmentStyle = .textOnly {
         didSet {
             if oldValue != segmentStyle {
                 if let collectionView_ = collectionView {
-                    let nilCellClass:AnyClass? = nil
+                    let nilCellClass: AnyClass? = nil
                     // unregister the old cell
                     switch oldValue {
                     case .textOnly:
@@ -55,7 +55,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
                     case .imageOnLeft:
                         collectionView_.register(nilCellClass, forCellWithReuseIdentifier: CollectionViewController.imageOnLeftCellIdentifier)
                     }
-
+                    
                     // register the new cell
                     switch segmentStyle {
                     case .textOnly:
@@ -89,15 +89,15 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    fileprivate var _segmentContentColor:UIColor?
-    @objc public dynamic var segmentContentColor:UIColor? {
+    fileprivate var _segmentContentColor: UIColor?
+    @objc public dynamic var segmentContentColor: UIColor? {
         get { return _segmentContentColor }
         set {
             _segmentContentColor = newValue
             reloadSegments()
         }
     }
-
+    
     fileprivate var _underlineHeight: CGFloat = 4.0
     @objc public dynamic var underlineHeight: CGFloat {
         get { return _underlineHeight }
@@ -109,8 +109,8 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    fileprivate var _selectedSegmentContentColor:UIColor?
-    @objc public dynamic var selectedSegmentContentColor:UIColor? {
+    fileprivate var _selectedSegmentContentColor: UIColor?
+    @objc public dynamic var selectedSegmentContentColor: UIColor? {
         get { return _selectedSegmentContentColor }
         set {
             _selectedSegmentContentColor = newValue
@@ -129,10 +129,10 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         configure()
     }
     
-    fileprivate var normalAttributes:[NSAttributedString.Key : Any]?
-    fileprivate var highlightedAttributes:[NSAttributedString.Key : Any]?
-    fileprivate var selectedAttributes:[NSAttributedString.Key : Any]?
-    fileprivate var _titleAttributes:[UInt: [NSAttributedString.Key : Any]] = [UInt: [NSAttributedString.Key : Any]]()
+    fileprivate var normalAttributes: [NSAttributedString.Key : Any]?
+    fileprivate var highlightedAttributes: [NSAttributedString.Key : Any]?
+    fileprivate var selectedAttributes: [NSAttributedString.Key : Any]?
+    fileprivate var _titleAttributes: [UInt: [NSAttributedString.Key : Any]] = [UInt: [NSAttributedString.Key : Any]]()
     @objc public func setTitleTextAttributes(_ attributes: [NSAttributedString.Key : Any]?, for state: UIControl.State) {
         _titleAttributes[state.rawValue] = attributes
         
@@ -276,7 +276,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
             }
             
             if selectedSegmentIndex >= 0 {
-                var scrollPossition:UICollectionView.ScrollPosition = .bottom
+                var scrollPossition: UICollectionView.ScrollPosition = .bottom
                 let indexPath = IndexPath(item: selectedSegmentIndex, section: 0)
                 if let atribs = collectionView?.layoutAttributesForItem(at: indexPath) {
                     let frame = atribs.frame
@@ -286,7 +286,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
                         scrollPossition = .right
                     }
                 }
-            
+                
                 collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: scrollPossition)
             } else {
                 if let indexPath = collectionView?.indexPathsForSelectedItems?.first {
@@ -304,7 +304,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
      Configure if the selected segment should have underline. Default value is false.
      */
     @IBInspectable
-    @objc public var underlineSelected:Bool = false
+    @objc public var underlineSelected: Bool = false
     
     // MARK: - Layout management
     
@@ -346,7 +346,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     }
     
     fileprivate func configureSegmentSize() {
-        let width:CGFloat
+        let width: CGFloat
         
         if fixedSegmentWidth == true {
             switch segmentStyle {
@@ -369,8 +369,8 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    fileprivate func calculateLongestTextWidth(text:String) {
-        let fontAttributes:[NSAttributedString.Key:Any]
+    fileprivate func calculateLongestTextWidth(text: String) {
+        let fontAttributes: [NSAttributedString.Key:Any]
         if normalAttributes != nil {
             fontAttributes = normalAttributes!
         } else  if highlightedAttributes != nil {
@@ -389,8 +389,8 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
     }
     
-    private func safeSegmentData(forIndex index:Int) -> SegmentData {
-        let segmentData:SegmentData
+    private func safeSegmentData(forIndex index: Int) -> SegmentData {
+        let segmentData: SegmentData
         
         if index <= 0 {
             segmentData = segmentsData[0]
@@ -420,11 +420,11 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     // MARK: - SegmentData
     
     final private class SegmentData {
-        var title:String?
-        var normalAttributedTitle:NSAttributedString?
-        var highlightedAttributedTitle:NSAttributedString?
-        var selectedAttributedTitle:NSAttributedString?
-        var image:UIImage?
+        var title: String?
+        var normalAttributedTitle: NSAttributedString?
+        var highlightedAttributedTitle: NSAttributedString?
+        var selectedAttributedTitle: NSAttributedString?
+        var image: UIImage?
     }
     
     // MARK : - CollectionViewController
@@ -505,7 +505,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         }
         
         fileprivate func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-            var label:UILabel?
+            var label: UILabel?
             if let _cell = cell as? TextOnlySegmentCollectionViewCell {
                 label = _cell.titleLabel
             } else if let _cell = cell as? ImageOnTopSegmentCollectionViewCell {
@@ -536,13 +536,13 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     // MARK: - SegmentCollectionViewCell
     
     private class BaseSegmentCollectionViewCell: UICollectionViewCell {
-        static let textPadding:CGFloat = 8.0
-        static let imageToTextMargin:CGFloat = 14.0
-        static let imageSize:CGFloat = 14.0
+        static let textPadding: CGFloat = 8.0
+        static let imageToTextMargin: CGFloat = 14.0
+        static let imageSize: CGFloat = 14.0
         static let defaultFont = UIFont.systemFont(ofSize: 14)
         static let defaultTextColor = UIColor.darkGray
         
-        var underlineView:UIView?
+        var underlineView: UIView?
         var underlineHeight: CGFloat = 4.0 {
             didSet {
                 if oldValue != underlineHeight {
@@ -550,15 +550,15 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
                 }
             }
         }
-        public var contentColor:UIColor?
-        public var selectedContentColor:UIColor?
+        public var contentColor: UIColor?
+        public var selectedContentColor: UIColor?
         
-        var normalAttributedTitle:NSAttributedString?
-        var highlightedAttributedTitle:NSAttributedString?
-        var selectedAttributedTitle:NSAttributedString?
+        var normalAttributedTitle: NSAttributedString?
+        var highlightedAttributedTitle: NSAttributedString?
+        var selectedAttributedTitle: NSAttributedString?
         var variableConstraints = [NSLayoutConstraint]()
         
-        var showUnderline:Bool = false {
+        var showUnderline: Bool = false {
             didSet {
                 if oldValue != showUnderline {
                     if oldValue == false && underlineView != nil {
@@ -633,7 +633,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
             }
         }
         
-        override var selectedContentColor:UIColor? {
+        override var selectedContentColor: UIColor? {
             didSet {
                 titleLabel.highlightedTextColor = (selectedContentColor == nil) ? UIColor.black : selectedContentColor!
             }
@@ -685,7 +685,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
             variableConstraints.append(titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor))
             variableConstraints.append(titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: BaseSegmentCollectionViewCell.textPadding))
             variableConstraints.append(titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -BaseSegmentCollectionViewCell.textPadding))
-
+            
             if let underline = underlineView {
                 variableConstraints.append(underline.heightAnchor.constraint(equalToConstant: underlineHeight))
             }
@@ -696,7 +696,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     private class ImageOnlySegmentCollectionViewCell: BaseSegmentCollectionViewCell {
         let imageView = UIImageView()
         
-        override var contentColor:UIColor? {
+        override var contentColor: UIColor? {
             didSet {
                 imageView.tintColor = (contentColor == nil) ? BaseSegmentCollectionViewCell.defaultTextColor : contentColor!
             }
@@ -753,19 +753,19 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
         let imageView = UIImageView()
         internal let stackView = UIStackView()
         
-        override var contentColor:UIColor? {
+        override var contentColor: UIColor? {
             didSet {
                 titleLabel.textColor = (contentColor == nil) ? BaseSegmentCollectionViewCell.defaultTextColor : contentColor!
                 imageView.tintColor = (contentColor == nil) ? BaseSegmentCollectionViewCell.defaultTextColor : contentColor!
             }
         }
         
-        override var selectedContentColor:UIColor? {
+        override var selectedContentColor: UIColor? {
             didSet {
                 titleLabel.highlightedTextColor = (selectedContentColor == nil) ? UIColor.black : selectedContentColor!
             }
         }
-
+        
         override var isHighlighted: Bool {
             didSet {
                 if let title = (isHighlighted) ? super.highlightedAttributedTitle : super.normalAttributedTitle {
@@ -839,7 +839,7 @@ public enum ScrollableSegmentedControlSegmentStyle: Int {
     }
     
     private class ImageOnTopSegmentCollectionViewCell: BaseImageSegmentCollectionViewCell {
-        override func configure(){
+        override func configure() {
             super.configure()
             stackView.axis = .vertical
         }
